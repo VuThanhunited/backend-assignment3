@@ -90,6 +90,7 @@ exports.login = async (req, res) => {
         fullName: user.fullName,
         email: user.email,
       },
+      token,
     });
   } catch (err) {
     console.error("Login error:", err);
