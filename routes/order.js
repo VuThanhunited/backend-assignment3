@@ -8,7 +8,7 @@ const {
   getOrderById,
 } = require("../controllers/orderController");
 
-router.post("/", verifyUser, auth, createOrder);
+router.post("/", auth, createOrder);
 router.get("/user", verifyUser, getUserOrders);
 router.get("/:id", verifyUser, getOrderById);
 
