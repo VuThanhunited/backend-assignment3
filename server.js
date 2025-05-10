@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const path = require("path");
+const userRoutes = require("./routes/user");
 
 // Load environment variables
 dotenv.config();
@@ -48,6 +49,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/sessions", sessionRoutes);
+app.use("/api/users", userRoutes);
 
 // ✅ Khởi chạy server
 const PORT = process.env.PORT || 5000;
