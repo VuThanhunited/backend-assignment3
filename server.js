@@ -28,6 +28,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "https://assignment3-478bc.web.app",
+      "https://frontend-admin-83abc.web.app",
     ],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
