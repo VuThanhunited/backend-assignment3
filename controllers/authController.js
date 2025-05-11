@@ -77,7 +77,7 @@ exports.login = async (req, res) => {
     // ✅ Gửi token dưới dạng cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // true nếu dùng HTTPS
+      secure: true, // true nếu dùng HTTPS
       sameSite: "Lax",
       maxAge: 24 * 60 * 60 * 1000, // 1 ngày
     });
