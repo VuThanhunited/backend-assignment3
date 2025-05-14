@@ -109,12 +109,14 @@ exports.logout = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-exports.getCurrentUser = (req, res) => {
-  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+exports.getCurrentUser = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
-  res.status(200).json({
-    id: req.user.id,
-    fullName: req.user.fullName,
-    email: req.user.email,
-  });
+  const user = await User.findById(req.user.id).select("-password");
+
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  res.status(200).json(user); // ✅ Đảm bảo trả đủ { fullName, email, role... }
 };
