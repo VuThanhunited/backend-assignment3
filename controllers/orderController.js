@@ -4,15 +4,21 @@ const nodemailer = require("nodemailer");
 
 exports.createOrder = async (req, res) => {
   try {
-    console.log("🧠 Decoded user:", req.user);
     const { cartItems, fullName, phone, address, email } = req.body;
-    console.log("📦 Received order data:", {
-      cartItems,
-      fullName,
-      phone,
-      address,
-      email,
-    });
+
+    if (!cartItems?.length || !fullName || !phone || !address || !email) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10,11}$/;
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({ message: "Invalid phone number" });
+    }
 
     let total = 0;
 
@@ -20,7 +26,6 @@ exports.createOrder = async (req, res) => {
       cartItems.map(async (item) => {
         const product = await Product.findById(item.productId);
         if (!product) throw new Error(`Product not found: ${item.productId}`);
-        console.log("✅ Found product:", product.name);
 
         const lineTotal = product.price * item.quantity;
         total += lineTotal;
@@ -49,7 +54,6 @@ exports.createOrder = async (req, res) => {
     });
 
     const saved = await order.save();
-    console.log("✅ Order saved:", saved._id);
 
     await sendOrderEmail(
       {
@@ -58,11 +62,10 @@ exports.createOrder = async (req, res) => {
         address,
         email,
         total,
-        products, // Đã bao gồm name, img, price, quantity
+        products,
       },
       email
     );
-    console.log("📧 Email sent to:", email);
 
     res.status(201).json(saved);
   } catch (error) {
@@ -73,8 +76,8 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-const sendOrderEmail = async (order, email) => {
-  const { fullName, phone, address, total, products } = order;
+const sendOrderEmail = async (order) => {
+  const { fullName, phone, address, total, products, email } = order;
 
   const formatter = new Intl.NumberFormat("vi-VN");
 
