@@ -14,6 +14,7 @@ const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/product");
 const orderRoutes = require("./routes/order");
 const sessionRoutes = require("./routes/session");
+const uploadRoutes = require("./routes/upload");
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use(
 
 // ✅ Cho phép truy cập file ảnh nếu có upload
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/upload", uploadRoutes);
 
 // ✅ Kết nối MongoDB
 mongoose
