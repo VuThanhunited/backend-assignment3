@@ -160,16 +160,14 @@ exports.getOrderById = async (req, res) => {
 
 exports.getUserOrders = async (req, res) => {
   try {
-    const userId = req.user?.id || req.query.userId; // fallback nếu không có middleware
-
+    const userId = req.user?.id;
     if (!userId) {
-      return res.status(400).json({ message: "User ID missing" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     const orders = await Order.find({ user: userId }).populate(
       "products.product"
     );
-
     res.json(orders);
   } catch (error) {
     console.error("❌ getUserOrders error:", error);

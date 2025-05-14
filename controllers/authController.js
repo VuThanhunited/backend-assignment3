@@ -100,5 +100,21 @@ exports.login = async (req, res) => {
 
 // Đăng xuất
 exports.logout = (req, res) => {
-  res.clearCookie("token").json({ message: "Logged out successfully" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    path: "/",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
+exports.getCurrentUser = (req, res) => {
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+  res.status(200).json({
+    id: req.user.id,
+    fullName: req.user.fullName,
+    email: req.user.email,
+  });
 };
